@@ -3,15 +3,17 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main # 💡 當 main 分支有新的 push 時，自動觸發這個機器人
+      - main
 
-# 設定機器人的權限，允許它讀取原始碼並寫入 GitHub Pages
+# 💡 依照 GitHub 2026 最新規範：強制將所有內建 Actions 升級以 Node 24 執行
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# 確保同時有多個推播時，排隊執行，避免衝突
 concurrency:
   group: "pages"
   cancel-in-progress: true
@@ -23,29 +25,29 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout 📥 (複製原始碼到雲端機器人)
+      - name: Checkout 📥
         uses: actions/checkout@v4
 
-      - name: Setup Node.js 🟢 (安裝 Node 環境)
+      - name: Setup Node.js 🟢
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24 # 💡 這裡同步切換至 Node 24
           cache: 'npm'
 
-      - name: Install dependencies 🛠️ (安裝專案套件，含 Tailwind v4)
+      - name: Install dependencies 🛠️
         run: npm ci
 
-      - name: Build project 🚀 (執行 Vite 打包編譯)
+      - name: Build project 🚀
         run: npm run build
 
-      - name: Setup Pages 🌐 (配置 GitHub Pages 環境)
-        uses: actions/configure-pages@v4
+      - name: Setup Pages 🌐
+        uses: actions/configure-pages@v5 # 💡 升級至 v5 以完美支援新版環境
 
-      - name: Upload artifact 📦 (打包編譯好的 dist 資料夾)
+      - name: Upload artifact 📦
         uses: actions/upload-pages-artifact@v3
         with:
           path: './dist'
 
-      - name: Deploy to GitHub Pages 🚀 (正式發佈到線上網頁)
+      - name: Deploy to GitHub Pages 🚀
         id: deployment
         uses: actions/deploy-pages@v4

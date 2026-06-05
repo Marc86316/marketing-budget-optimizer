@@ -1,8 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: '/marketing-budget-optimizer/',
+  base: '/marketing-budget-optimizer/', // 💡 檢查這裡！前後一定要有 / 
 })

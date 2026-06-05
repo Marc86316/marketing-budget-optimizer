@@ -1,7 +1,5 @@
 /* 1. 首先引入 Tailwind CSS 的核心層級 */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 /* 2. 全域變數與原生樣式設定 */
 :root {
